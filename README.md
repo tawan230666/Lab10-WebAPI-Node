@@ -131,9 +131,19 @@ git branch -M main
 git remote add origin https://github.com/<your-username>/Lab10-WebAPI-Node.git
 git push -u origin main
 
-## Screenshots
+## 🖼️ Screenshots
+
+### phpMyAdmin
 ![phpMyAdmin](assets/phpmyadmin.png)
+
+### Postman: GET all products
 ![GET /products](assets/postman-get.png)
+
+### Postman: POST new product
 ![POST /products](assets/postman-post.png)
+
+### Postman: PUT update product
 ![PUT /products/:id](assets/postman-put.png)
+
+### Postman: DELETE product
 ![DELETE /products/:id](assets/postman-delete.png)
