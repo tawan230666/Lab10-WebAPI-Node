@@ -36,7 +36,8 @@ git clone https://github.com/tawan230666/Lab10-WebAPI-Node.git
 cd Lab10-WebAPI-Node
 npm install
 cp .env.example .env               # adjust DB credentials
-# Import database.sql in phpMyAdmin (or: mysql -u root < database.sql)
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS lab10_webapi"
+mysql -u root lab10_webapi < database.sql   # or import it in phpMyAdmin
 npm run dev                        # http://localhost:3000
 ```
 
