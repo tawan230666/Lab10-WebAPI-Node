@@ -1,149 +1,47 @@
-# Lab10 WebAPI (Node.js + MySQL) – Fighter Jet Products
+# Product REST API — Node.js + MySQL
 
-## 📌 Project Overview
-สร้าง Web API สำหรับจัดการสินค้า (products) โดยใช้ **Node.js + Express + MySQL (XAMPP)**  
-ข้อมูลสินค้าเป็นโมเดล/ของสะสมเกี่ยวกับเครื่องบินรบ (25 รายการ)  
-รองรับการทำงาน CRUD:
-- GET all products
-- GET single product
-- POST (add new product)
-- PUT (update product)
-- DELETE (remove product)
+**A CRUD REST API for a catalogue of 25 fighter-jet model products, built with Express and a MySQL connection pool, with input validation and parameterised queries.**
 
-## 🛠️ Tech Stack
-- Node.js + Express
-- MySQL (XAMPP / phpMyAdmin)
-- dotenv (config)
-- mysql2 (connection pool)
-- Postman (test API)
+![Node.js](https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?logo=express&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white)
+![Postman](https://img.shields.io/badge/tested_with-Postman-FF6C37?logo=postman&logoColor=white)
 
-## ⚙️ Setup
-1. เปิด XAMPP → Start Apache + MySQL  
-2. เข้า **phpMyAdmin** → Import `database.sql`  
-3. Clone โปรเจกต์จาก GitHub
-   ```bash
-   git clone https://github.com/<your-username>/Lab10-WebAPI-Node.git
-   cd Lab10-WebAPI-Node
-ติดตั้ง dependencies
+> **Lab 10: Web API with Node.js and MySQL.**
 
+## API
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/products` | List all products |
+| `GET` | `/products/:id` | Get one product (`404` if missing) |
+| `POST` | `/products` | Create (`title` and `price ≥ 0` required) → `201` |
+| `PUT` | `/products/:id` | Replace a product → `404` if missing |
+| `DELETE` | `/products/:id` | Delete → `404` if missing |
+
+- **SQL injection safe:** every query uses `?` placeholders through `mysql2`
+- **Connection pooling** with `mysql2/promise`; configuration from `.env`
+- **Consistent errors:** `400` for invalid input, `404` for missing rows, `500` without internal details in production
+
+| Create (POST) | List (GET) |
+|---|---|
+| ![](assets/postman-post.png) | ![](assets/postman-get.png) |
+
+## Run
+
+Requires Node.js and MySQL (for example via XAMPP).
+
+```bash
+git clone https://github.com/tawan230666/Lab10-WebAPI-Node.git
+cd Lab10-WebAPI-Node
 npm install
+cp .env.example .env               # adjust DB credentials
+# Import database.sql in phpMyAdmin (or: mysql -u root < database.sql)
+npm run dev                        # http://localhost:3000
+```
 
+Import `Lab10-WebAPI.postman_collection.json` into Postman to run every request.
 
-สร้างไฟล์ .env จาก .env.example
+---
 
-PORT=3000
-DB_HOST=localhost
-DB_USER=root
-DB_PASS=
-DB_NAME=lab10_webapi
-
-▶️ Run
-npm run dev
-
-
-API จะรันที่ http://localhost:3000
-
-📡 API Examples
-1) GET all products
-GET http://localhost:3000/products
-
-2) GET single product
-GET http://localhost:3000/products/1
-
-
-Response:
-
-{
-  "id": 1,
-  "title": "F-16 Fighter Jet Model 1:72",
-  "price": 1290,
-  "description": "Plastic model kit scale 1:72, pre-painted, perfect for collection or display.",
-  "category": "models",
-  "image": "https://example.com/img/f16-1-72.jpg"
-}
-
-3) POST new product
-POST http://localhost:3000/products
-Content-Type: application/json
-
-
-Body:
-
-{
-  "title": "F-18 Super Hornet Model 1:72",
-  "price": 1490,
-  "description": "High-detail model for collection.",
-  "category": "models",
-  "image": "https://example.com/img/f18-1-72.jpg"
-}
-
-4) PUT update product
-PUT http://localhost:3000/products/1
-Content-Type: application/json
-
-
-Body:
-
-{
-  "title": "F-16 Fighting Falcon Model (Updated)",
-  "price": 1390,
-  "description": "Updated version with new decals.",
-  "category": "models",
-  "image": "https://example.com/img/f16-updated.jpg"
-}
-
-5) DELETE product
-DELETE http://localhost:3000/products/1
-
-🖼️ Screenshots
-
-phpMyAdmin: ตาราง products
-
-Postman: ทดสอบ GET/POST/PUT/DELETE
-
-โครงสร้างโฟลเดอร์โปรเจกต์
-
-📥 Import Postman Collection
-
-เปิด Postman → Import → เลือกไฟล์ Lab10-WebAPI.postman_collection.json
-
-จะได้ request ครบทั้ง 5 แบบ (GET all, GET by id, POST, PUT, DELETE)
-
-📂 Project Structure
-Lab10-WebAPI-Node/
-├─ database.sql
-├─ Lab10-WebAPI.postman_collection.json
-├─ .env.example
-├─ package.json
-├─ server.js
-├─ db.js
-└─ README.md
-
-📄 .gitignore
-node_modules
-.env
-
-🚀 Deploy to GitHub
-git init
-git add .
-git commit -m "Lab10 WebAPI (Node + MySQL) - fighter jet products"
-git branch -M main
-git remote add origin https://github.com/<your-username>/Lab10-WebAPI-Node.git
-git push -u origin main
-
-## 🖼️ Screenshots
-
-### phpMyAdmin
-![phpMyAdmin](assets/phpmyadmin.png)
-
-### Postman: GET all products
-![GET /products](assets/postman-get.png)
-
-### Postman: POST new product
-![POST /products](assets/postman-post.png)
-
-### Postman: PUT update product
-![PUT /products/:id](assets/postman-put.png)
-
-### Postman: DELETE product
-![DELETE /products/:id](assets/postman-delete.png)
+**Author:** Tawan Tiphkun (ธาวัน ทิพคุณ), [@tawan230666](https://github.com/tawan230666), Software Engineering, RMUTL Chiang Mai

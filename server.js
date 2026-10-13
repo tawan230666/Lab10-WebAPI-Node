@@ -22,7 +22,7 @@ app.get('/products', async (_req, res) => {
     );
     res.json(rows);
   } catch (e) {
-    res.status(500).json({ error: 'Server error', detail: e.message });
+    res.status(500).json({ error: 'Server error', ...(process.env.NODE_ENV !== 'production' && { detail: e.message }) });
   }
 });
 
@@ -36,7 +36,7 @@ app.get('/products/:id', async (req, res) => {
     if (rows.length === 0) return res.status(404).json({ error: 'Not found' });
     res.json(rows[0]);
   } catch (e) {
-    res.status(500).json({ error: 'Server error', detail: e.message });
+    res.status(500).json({ error: 'Server error', ...(process.env.NODE_ENV !== 'production' && { detail: e.message }) });
   }
 });
 
@@ -44,8 +44,8 @@ app.get('/products/:id', async (req, res) => {
 app.post('/products', async (req, res) => {
   try {
     const { title, price, description, category, image } = req.body || {};
-    if (!title || typeof price !== 'number') {
-      return res.status(400).json({ error: 'title (string) and price (number) are required' });
+    if (typeof title !== 'string' || !title.trim() || typeof price !== 'number' || price < 0) {
+      return res.status(400).json({ error: 'title (non-empty string) and price (number ≥ 0) are required' });
     }
     const [result] = await pool.query(
       'INSERT INTO products (title, price, description, category, image) VALUES (?, ?, ?, ?, ?)',
@@ -57,7 +57,7 @@ app.post('/products', async (req, res) => {
     );
     res.status(201).json(rows[0]);
   } catch (e) {
-    res.status(500).json({ error: 'Server error', detail: e.message });
+    res.status(500).json({ error: 'Server error', ...(process.env.NODE_ENV !== 'production' && { detail: e.message }) });
   }
 });
 
@@ -65,8 +65,8 @@ app.post('/products', async (req, res) => {
 app.put('/products/:id', async (req, res) => {
   try {
     const { title, price, description, category, image } = req.body || {};
-    if (!title || typeof price !== 'number') {
-      return res.status(400).json({ error: 'title (string) and price (number) are required' });
+    if (typeof title !== 'string' || !title.trim() || typeof price !== 'number' || price < 0) {
+      return res.status(400).json({ error: 'title (non-empty string) and price (number ≥ 0) are required' });
     }
     const [result] = await pool.query(
       'UPDATE products SET title=?, price=?, description=?, category=?, image=? WHERE id=?',
@@ -80,7 +80,7 @@ app.put('/products/:id', async (req, res) => {
     );
     res.json(rows[0]);
   } catch (e) {
-    res.status(500).json({ error: 'Server error', detail: e.message });
+    res.status(500).json({ error: 'Server error', ...(process.env.NODE_ENV !== 'production' && { detail: e.message }) });
   }
 });
 
@@ -91,7 +91,7 @@ app.delete('/products/:id', async (req, res) => {
     if (result.affectedRows === 0) return res.status(404).json({ error: 'Not found' });
     res.json({ ok: true, deletedId: Number(req.params.id) });
   } catch (e) {
-    res.status(500).json({ error: 'Server error', detail: e.message });
+    res.status(500).json({ error: 'Server error', ...(process.env.NODE_ENV !== 'production' && { detail: e.message }) });
   }
 });
 
